@@ -1,6 +1,7 @@
 const express = require('express');
 const { ExpressPeerServer } = require('peer');
 const app = express();
+const rooms = {}
 
 const httpServer = require('http').createServer(app);
 const io = require('socket.io')(httpServer, {
@@ -23,7 +24,14 @@ io.on('connection', (socket) => {
     socket.join('room');
     io.to('room').emit('connect-user', userId);
   });
+  socket.on('roomid',(userid)=>{
+    rooms[userid] = userid
+    console.log(rooms)
+  })
 });
+setInterval(()=>{
+   io.emit('rooms',rooms)
+},15)
 
 const PORT = process.env.PORT || 3000;
 httpServer.listen(PORT, () => console.log(`App is listening on ${PORT}`));
