@@ -1,0 +1,91 @@
+  .video-player{
+    position: absolute;
+    width:1000px;
+    height: 720px;
+    border: 3px solid rgb(4, 0, 255);
+    left: 240px;
+    top:40px;
+    border-radius: 10px;
+    /* object-fit: cover; */
+
+  }
+  .search{
+    display: inline-block;
+    padding-left: 20px;
+    position: absolute;
+    left: 1000px;
+  }
+  .roomid{
+    position: absolute;
+    border-radius: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: aliceblue;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:18px ;font-weight: bold;
+    outline: none;
+    
+  }
+  #room{
+    border: 4px solid blue;
+    margin: 0px;
+    border-radius: 5px;}
+  #roomid{
+      border: 4px solid blue;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      font-size:18px ;font-weight: bold;
+      outline: none;
+      margin: 0px;
+      border-radius: 5px;
+  }
+  #roombutton{
+    border: 4px solid blue;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:18px ;font-weight: bold;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  #roombutton:hover{
+    background-color: blue;
+  }
+  .video{
+    width: 230px;
+    height: 200px;
+    position: absolute;
+    top: 60px;
+    border-radius: 10px;
+    
+  }
+  body{
+  background:black;
+  margin: 0px;
+  }
+  #link{
+    border-radius: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-align: center;
+    border: 4px solid blue;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:18px ;font-weight: bold;
+    outline: none;
+  }
+  #searchbutton{
+    border-radius: 10px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    text-align: center;
+    border: 4px solid blue;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:18px ;font-weight: bold;
+  }
+  #searchbutton:hover{
+    background-color: antiquewhite;
+    cursor:pointer;
+  }
+
+  #chat{
+    border: 4px blue;
+    width:400px
+  }
