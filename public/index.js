@@ -93,7 +93,12 @@ function createroom(){
   peerid.style.left = '240px'
 }
 function CopyToClipboard() {
-  navigator.clipboard.writeText(`${localUserId}`);
+  var inputElement = document.createElement("input");
+  inputElement.value = localUserId;
+  document.body.appendChild(inputElement);
+  inputElement.select();
+  document.execCommand("copy");
+  document.body.removeChild(inputElement);
   alert("RoomID has been created and copied Now you can invite your friends")
 }
 
@@ -124,12 +129,6 @@ peer.on('close', ()=>{
 function playvideo(){
   var link = document.getElementById('link').value
   socket.emit('videolink',({vlink:link,room_id:roomid}))
-  // var videoPlayer = document.getElementById('video-player');
-  // videoPlayer.innerHTML = `
-  //   <video width="100%" height="100%" autoplay controls style="border-radius : 10px">
-  //     <source src="${link}" type="video/mp4">
-  //   </video>
-  // `;
 }
 
 function addMessage(message) {
