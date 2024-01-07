@@ -30,14 +30,15 @@ io.on('connection', (socket) => {
     }
     roommembers[roomid].push(userid)
   })
-  socket.on('messagebyuser', (message)=>{
-    io.emit('messageemit', message)
+  socket.on('messagebyuser', ({message,sender})=>{
+
+    io.emit('messageemit', ({message,sender}))
   })
   socket.on('videolink',({vlink,room_id})=>{
-    for(const room in roommembers)
-     if(room==room_id){
-      io.emit('video-link',vlink)
-     }
+      io.emit('video-link',{vlink:vlink,room_id:room_id})
+  })
+  socket.on('videoState',(currentTime)=>{
+      io.emit('back_videoState',currentTime)
   })
 });
 setInterval(()=>{

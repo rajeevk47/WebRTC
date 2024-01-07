@@ -123,7 +123,7 @@ const newVideo = (stream) => {
   
 };
 peer.on('close', ()=>{
-  video.remove
+  video.remove()
 })
 
 function playvideo(){
@@ -131,39 +131,63 @@ function playvideo(){
   socket.emit('videolink',({vlink:link,room_id:roomid}))
 }
 
-function addMessage(message) {
+function addMessage(message,sender) {
   var chatbox = document.getElementById('chatbox');
   var newMessage = document.createElement('div');
   newMessage.classList.add('message');
   newMessage.textContent = message;
   chatbox.appendChild(newMessage);
   chatbox.scrollTop = chatbox.scrollHeight;
+  if(sender==localUserId){newMessage.style.left='90px'}
+  else{newMessage.style.left='0px'}
+  
 }
 function onSeek(position) {
   socket.emit('seek', { position, room_id: roomid });
 }
 
 
-function sendMessage(){addMessage(document.getElementById('message').value)}
+function sendMessage(){
+  if(document.getElementById('message').value !='')socket.emit('messagebyuser',({message:document.getElementById('message').value, sender:localUserId}))
+   document.getElementById('message').value=''
+}
 document.getElementById('message').addEventListener('keydown',(e)=>{
     if(e.key=='Enter'){
-      // sendMessage(message)
-      socket.emit('messagebyuser',document.getElementById('message').value)
+      if(document.getElementById('message').value !='')socket.emit('messagebyuser',({message:document.getElementById('message').value, sender:localUserId}))
+      document.getElementById('message').value =''
     }
 })
-socket.on('messageemit',(message)=>{
-      addMessage(message)
+socket.on('messageemit',({message,sender})=>{
+  console.log(roomid)
+  for(const room_id in roomplayers){
+    if(room_id==roomid){
+     for(const id in roomplayers[room_id]){
+
+     }}}
   
+     addMessage(message,sender)
 })
 var videoPlayer 
-socket.on('video-link',(link)=>{
+let m_video =''
+socket.on('video-link',({vlink,room_id})=>{
+  if(room_id==roomid){
   videoPlayer= document.getElementById('video-player');
   videoPlayer.innerHTML = `
     <video id="m_video" width="100%" height="100%" autoplay controls style="border-radius : 10px">
-      <source src="${link}" type="video/mp4">
+      <source src="${vlink}" type="video/mp4">
     </video>
-  `;
-
+  `
+  if(localUserId!=roomid){socket.on('back_videoState', (currentTime)=>{
+    m_video.controls = false
+    m_video.currentTime=currentTime
+  })}
+  m_video= document.getElementById('m_video')
+  ;}
+  if(m_video!='' && localUserId==roomid){
+    m_video.addEventListener('timeupdate',()=>{
+      socket.emit('videoState', m_video.currentTime);
+    })
+  }
 })
-if(m_video){const m_video= document.getElementById(m_video)
-console.log(m_video)}
+// if(m_video){const m_video= document.getElementById(m_video)
+// console.log(m_video)}
