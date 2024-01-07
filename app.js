@@ -21,10 +21,6 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  socket.on('video-join', (userId) => {
-    socket.join('room');
-    io.to('room').emit('connect-user', userId);
-  });
   socket.on('roomid',(userid)=>{
     rooms[userid] = userid
   })
@@ -33,6 +29,15 @@ io.on('connection', (socket) => {
       roommembers[roomid]= []
     }
     roommembers[roomid].push(userid)
+  })
+  socket.on('messagebyuser', (message)=>{
+    io.emit('messageemit', message)
+  })
+  socket.on('videolink',({vlink,room_id})=>{
+    for(const room in roommembers)
+     if(room==room_id){
+      io.emit('video-link',vlink)
+     }
   })
 });
 setInterval(()=>{
