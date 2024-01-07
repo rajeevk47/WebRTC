@@ -40,15 +40,15 @@ function checkroom(){
         });
       }
     )
-     for(const roomid in roomplayers){
-       if(roomid==roomid){
-        for(const id in roomplayers[roomid]){
-          console.log(roomplayers[roomid][id])
-          // peer.connect(roomplayers[roomid][id])
+     for(const room_id in roomplayers){
+       if(room_id==roomid){
+        for(const id in roomplayers[room_id]){
+          console.log(roomplayers[room_id][id])
+          peer.connect(roomplayers[room_id][id])
           getUserMedia(
             { video: true, audio: true },
             function (stream){
-              var call = peer.call(roomplayers[roomid][id], stream);
+              var call = peer.call(roomplayers[room_id][id], stream);
               call.on('stream', function (remoteStream) {
                 newVideo(remoteStream);
               });
