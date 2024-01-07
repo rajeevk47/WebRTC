@@ -114,6 +114,8 @@ const newVideo = (stream) => {
   video.style.objectFit = 'cover';
   video.style.border ='3px solid rgb(160, 10, 198)' ;
   video.style.borderRadius = '10px';
+
+  
 };
 peer.on('close', ()=>{
   video.remove
@@ -138,6 +140,10 @@ function addMessage(message) {
   chatbox.appendChild(newMessage);
   chatbox.scrollTop = chatbox.scrollHeight;
 }
+function onSeek(position) {
+  socket.emit('seek', { position, room_id: roomid });
+}
+
 
 function sendMessage(){addMessage(document.getElementById('message').value)}
 document.getElementById('message').addEventListener('keydown',(e)=>{
@@ -147,15 +153,18 @@ document.getElementById('message').addEventListener('keydown',(e)=>{
     }
 })
 socket.on('messageemit',(message)=>{
-   for(const room_id in roomplayers){
       addMessage(message)
-  }
+  
 })
+var videoPlayer 
 socket.on('video-link',(link)=>{
-  var videoPlayer = document.getElementById('video-player');
+  videoPlayer= document.getElementById('video-player');
   videoPlayer.innerHTML = `
-    <video width="100%" height="100%" autoplay controls style="border-radius : 10px">
+    <video id="m_video" width="100%" height="100%" autoplay controls style="border-radius : 10px">
       <source src="${link}" type="video/mp4">
     </video>
   `;
+
 })
+if(m_video){const m_video= document.getElementById(m_video)
+console.log(m_video)}
