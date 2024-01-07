@@ -3,6 +3,7 @@ const peer = new Peer();
 var localUserId = '';
 let roomarray ={}
 let roomplayers={}
+let roomid
 var videosAry = [];
 const getUserMedia =
   navigator.getUserMedia ||
@@ -14,7 +15,7 @@ getUserMedia({ video: true, audio: true }, function (stream) {
 });
 peer.on('open', (id) => {
   localUserId = id;
-  socket.emit('video-join', id);
+  roomid=id
 });
 socket.on('rooms',(rooms)=>{
   roomarray=rooms
@@ -24,8 +25,9 @@ socket.on('roommembers',(roommembers)=>{
 })
 
 
+
 function checkroom(){
-  var roomid = document.getElementById('roomid').value
+  roomid = document.getElementById('roomid').value
   for(const id in roomarray){
   if(roomid==roomarray[id]){
      socket.emit('roommember',{roomid:roomid,userid:localUserId})
@@ -43,7 +45,6 @@ function checkroom(){
      for(const room_id in roomplayers){
        if(room_id==roomid){
         for(const id in roomplayers[room_id]){
-          console.log(roomplayers[room_id][id])
           peer.connect(roomplayers[room_id][id])
           getUserMedia(
             { video: true, audio: true },
@@ -79,6 +80,7 @@ peer.on('connection', function (con) {
 
 function createroom(){
   if(localUserId){
+  // socket.emit('roommember',({roomid:localUserId,userid:localUserId}))
   socket.emit('roomid', localUserId)
   var peerid = document.getElementById('rooms')
   peerid.innerHTML=`<button onmouseover="this.style.backgroundColor='blue'" onmouseout="this.style.backgroundColor='white'" onclick= "CopyToClipboard() ;this.innerText ='Copied!'" style="border: 4px solid blue;
@@ -119,13 +121,13 @@ peer.on('close', ()=>{
 
 function playvideo(){
   var link = document.getElementById('link').value
-  var videoPlayer = document.getElementById('video-player');
-  videoPlayer.innerHTML = `
-    <video width="100%" height="100%" autoplay controls style="border-radius : 10px">
-      <source src="${link}" type="video/mp4">
-    </video>
-  `;
-
+  socket.emit('videolink',({vlink:link,room_id:roomid}))
+  // var videoPlayer = document.getElementById('video-player');
+  // videoPlayer.innerHTML = `
+  //   <video width="100%" height="100%" autoplay controls style="border-radius : 10px">
+  //     <source src="${link}" type="video/mp4">
+  //   </video>
+  // `;
 }
 
 function addMessage(message) {
@@ -140,6 +142,20 @@ function addMessage(message) {
 function sendMessage(){addMessage(document.getElementById('message').value)}
 document.getElementById('message').addEventListener('keydown',(e)=>{
     if(e.key=='Enter'){
-      sendMessage()
+      // sendMessage(message)
+      socket.emit('messagebyuser',document.getElementById('message').value)
     }
+})
+socket.on('messageemit',(message)=>{
+   for(const room_id in roomplayers){
+      addMessage(message)
+  }
+})
+socket.on('video-link',(link)=>{
+  var videoPlayer = document.getElementById('video-player');
+  videoPlayer.innerHTML = `
+    <video width="100%" height="100%" autoplay controls style="border-radius : 10px">
+      <source src="${link}" type="video/mp4">
+    </video>
+  `;
 })
