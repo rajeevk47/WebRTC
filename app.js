@@ -2,6 +2,7 @@ const express = require('express');
 const { ExpressPeerServer } = require('peer');
 const app = express();
 const rooms = {}
+const roommembers = {}
 
 const httpServer = require('http').createServer(app);
 const io = require('socket.io')(httpServer, {
@@ -26,11 +27,17 @@ io.on('connection', (socket) => {
   });
   socket.on('roomid',(userid)=>{
     rooms[userid] = userid
-    console.log(rooms)
+  })
+  socket.on('roommember',({roomid,userid})=>{
+    if(!roommembers[roomid]){
+      roommembers[roomid]= []
+    }
+    roommembers[roomid].push(userid)
   })
 });
 setInterval(()=>{
    io.emit('rooms',rooms)
+   io.emit('roommembers', roommembers)
 },15)
 
 const PORT = process.env.PORT || 3000;

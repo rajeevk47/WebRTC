@@ -2,6 +2,7 @@ const socket = io();
 const peer = new Peer();
 var localUserId = '';
 let roomarray ={}
+let roomplayers={}
 var videosAry = [];
 const getUserMedia =
   navigator.getUserMedia ||
@@ -18,27 +19,17 @@ peer.on('open', (id) => {
 socket.on('rooms',(rooms)=>{
   roomarray=rooms
 })
+socket.on('roommembers',(roommembers)=>{
+  roomplayers=roommembers
+})
 
 
-
-socket.on('connect-user', (userId) => {
-  if (localUserId === userId) return;
-  // peer.connect(userId)  ]'
-  getUserMedia(
-    { video: true, audio: true },
-    function (stream) {
-      var call = peer.call(userId, stream);
-      call.on('stream', function (remoteStream) {
-        newVideo(remoteStream);
-      });
-    }
-  )
-});
 function checkroom(){
   var roomid = document.getElementById('roomid').value
   for(const id in roomarray){
   if(roomid==roomarray[id]){
-     console.log(roomid)
+     socket.emit('roommember',{roomid:roomid,userid:localUserId})
+     
      peer.connect(roomid)
      getUserMedia(
       { video: true, audio: true },
@@ -49,6 +40,26 @@ function checkroom(){
         });
       }
     )
+     for(const roomid in roomplayers){
+       if(roomid==roomid){
+        for(const id in roomplayers[roomid]){
+          console.log(roomplayers[roomid][id])
+          // peer.connect(roomplayers[roomid][id])
+          getUserMedia(
+            { video: true, audio: true },
+            function (stream){
+              var call = peer.call(roomplayers[roomid][id], stream);
+              call.on('stream', function (remoteStream) {
+                newVideo(remoteStream);
+              });
+            }
+          )
+
+        }
+       }
+     }
+     
+    
   }}
 }
 
@@ -70,8 +81,20 @@ function createroom(){
   if(localUserId){
   socket.emit('roomid', localUserId)
   var peerid = document.getElementById('rooms')
-  peerid.innerHTML=`<div>${localUserId}</div>`}
+  peerid.innerHTML=`<button onmouseover="this.style.backgroundColor='blue'" onmouseout="this.style.backgroundColor='white'" onclick= "CopyToClipboard() ;this.innerText ='Copied!'" style="border: 4px solid blue;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size:18px ;font-weight: bold;
+  outline: none;
+  border-radius: 5px;
+  cursor: pointer;">Click to copy Roomid</button>`}
+  peerid.style.position='absolute'
+  peerid.style.left = '240px'
 }
+function CopyToClipboard() {
+  navigator.clipboard.writeText(`${localUserId}`);
+  alert("RoomID has been created and copied Now you can invite your friends")
+}
+
 
 const newVideo = (stream) => {
   const video = document.createElement('video');
@@ -104,3 +127,19 @@ function playvideo(){
   `;
 
 }
+
+function addMessage(message) {
+  var chatbox = document.getElementById('chatbox');
+  var newMessage = document.createElement('div');
+  newMessage.classList.add('message');
+  newMessage.textContent = message;
+  chatbox.appendChild(newMessage);
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+function sendMessage(){addMessage(document.getElementById('message').value)}
+document.getElementById('message').addEventListener('keydown',(e)=>{
+    if(e.key=='Enter'){
+      sendMessage()
+    }
+})

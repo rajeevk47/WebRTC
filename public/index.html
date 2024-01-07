@@ -12,7 +12,7 @@
       <input id="roomid" placeholder="Enter roomid">
       <button onclick="checkroom()" id="roombutton"><i class="fa fa-check" ></i></button>
       OR
-      <button onclick="createroom()" id="roombutton">Create room</button>
+      <button onclick="createroom(); CopyToClipboard()" id="roombutton">Create room</button>
         
     </div>
     <div class="search">
@@ -22,7 +22,14 @@
     <div id="video-player" class="video-player" ></div>
     <div id="video-container" class="video"></div>
 
-    <div id="chat"></div>
+    <div id="chat">
+      <div id="name">CHAT</div>
+      <div id="chatbox" style="overflow-y: auto;overflow-x: hidden;"></div>
+      <div id="chatbox-1" >
+        <input type="text" placeholder="Message" id="message">
+        <button id="send" onclick="sendMessage()"><i class="fa fa-send-o"></i></button>
+      <div id="messagesent" class="message"></div>
+    </div>
     <script src="index.js"></script>
   </body>
 </html>
