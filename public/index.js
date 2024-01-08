@@ -138,34 +138,31 @@ function addMessage(message,sender) {
   newMessage.textContent = message;
   chatbox.appendChild(newMessage);
   chatbox.scrollTop = chatbox.scrollHeight;
-  if(sender==localUserId){newMessage.style.left='90px'}
-  else{newMessage.style.left='0px'}
   
-}
-function onSeek(position) {
-  socket.emit('seek', { position, room_id: roomid });
+  if(sender==localUserId){newMessage.style.left='90px';newMessage.style.borderColor="black"}
+  else{newMessage.style.left='0px';newMessage.style.border="3px solid grey"}
+  
 }
 
 
 function sendMessage(){
-  if(document.getElementById('message').value !='')socket.emit('messagebyuser',({message:document.getElementById('message').value, sender:localUserId}))
+  if(document.getElementById('message').value !='')socket.emit('messagebyuser',({message:document.getElementById('message').value, sender:localUserId,mroom_id:roomid}))
    document.getElementById('message').value=''
 }
 document.getElementById('message').addEventListener('keydown',(e)=>{
     if(e.key=='Enter'){
-      if(document.getElementById('message').value !='')socket.emit('messagebyuser',({message:document.getElementById('message').value, sender:localUserId}))
+      if(document.getElementById('message').value !='')socket.emit('messagebyuser',({message:document.getElementById('message').value, sender:localUserId,mroom_id:roomid}))
       document.getElementById('message').value =''
     }
 })
-socket.on('messageemit',({message,sender})=>{
-  console.log(roomid)
-  for(const room_id in roomplayers){
-    if(room_id==roomid){
-     for(const id in roomplayers[room_id]){
-
-     }}}
-  
-     addMessage(message,sender)
+socket.on('messageemit',({message,sender,mroom_id})=>{
+  // console.log(roomid)
+  // console.log(roomplayers)
+    if(roomid==mroom_id){
+      addMessage(message,sender)
+     }
+    
+     
 })
 var videoPlayer 
 let m_video =''

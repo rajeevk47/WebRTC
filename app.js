@@ -30,9 +30,8 @@ io.on('connection', (socket) => {
     }
     roommembers[roomid].push(userid)
   })
-  socket.on('messagebyuser', ({message,sender})=>{
-
-    io.emit('messageemit', ({message,sender}))
+  socket.on('messagebyuser', ({message,sender,mroom_id})=>{
+    io.emit('messageemit', ({message,sender,mroom_id}))
   })
   socket.on('videolink',({vlink,room_id})=>{
       io.emit('video-link',{vlink:vlink,room_id:room_id})
