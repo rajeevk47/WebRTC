@@ -146,9 +146,11 @@
     top:8px;
     padding-top: 5px;
     padding-bottom: 5px;
+    outline: none;
   }
   #send:hover{
     background-color: blue;
+    cursor: pointer;
   }
   #messagesent{
     position: relative;
