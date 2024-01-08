@@ -10,7 +10,7 @@ const getUserMedia =
   navigator.webkitGetUserMedia ||
   navigator.mozGetUserMedia;
 
-getUserMedia({ video: true, audio: true }, function (stream) {
+getUserMedia({ video: true, audio: false }, function (stream) {
   newVideo(stream);
 });
 peer.on('open', (id) => {
@@ -122,9 +122,9 @@ const newVideo = (stream) => {
 
   
 };
-peer.on('close', ()=>{
-  video.remove()
-})
+// peer.on('close', ()=>{
+//   video.remove()
+// })
 
 function playvideo(){
   var link = document.getElementById('link').value
@@ -189,5 +189,3 @@ socket.on('video-link',({vlink,room_id})=>{
     })
   }
 })
-// if(m_video){const m_video= document.getElementById(m_video)
-// console.log(m_video)}
